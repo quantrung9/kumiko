@@ -2,7 +2,7 @@
 
 Swift port of [Kumiko](https://github.com/njean42/kumiko), the comic panel detection tool.
 
-## Status: Phase 1 - Foundation Complete ✅
+## Status: Phase 2 - Geometry Module Complete ✅
 
 This is an in-progress port of Kumiko from Python to Swift. The implementation follows a 13-week roadmap detailed in [SWIFT_PORTING_PLAN.md](../SWIFT_PORTING_PLAN.md).
 
@@ -11,7 +11,7 @@ This is an in-progress port of Kumiko from Python to Swift. The implementation f
 | Phase | Status | Description |
 |-------|--------|-------------|
 | **Phase 1** | ✅ **Complete** | Foundation & project setup |
-| Phase 2 | ⏳ Pending | Geometry module (Segment) |
+| **Phase 2** | ✅ **Complete** | Geometry module (Segment) |
 | Phase 3 | ⏳ Pending | Panel operations |
 | Phase 4 | ⏳ Pending | OpenCV integration |
 | Phase 5 | ⏳ Pending | Page analysis algorithm |
@@ -28,6 +28,16 @@ This is an in-progress port of Kumiko from Python to Swift. The implementation f
 - ✅ Command-line interface skeleton with ArgumentParser
 - ✅ Unit test framework
 - ✅ Buildable package
+
+### Phase 2 Deliverables ✅
+
+- ✅ Complete Segment class (~450 lines, pure Swift)
+- ✅ Point structure for 2D coordinates
+- ✅ All geometric operations (distance, angles, intersection, union)
+- ✅ NumPy operations replaced with native Swift math
+- ✅ 54 comprehensive unit tests
+- ✅ Python compatibility validation suite
+- ✅ 100% feature parity with Python lib/segment.py
 
 ## Requirements
 
@@ -62,9 +72,12 @@ swift run kumiko-cli -i /path/to/image.jpg
 swift/
 ├── Package.swift                    # Swift Package Manager manifest
 ├── README.md                        # This file
+├── PHASE1_CHECKLIST.md             # Phase 1 completion tracking
+├── PHASE2_CHECKLIST.md             # Phase 2 completion tracking
 ├── Sources/
 │   ├── Kumiko/                     # Library module
 │   │   ├── Kumiko.swift           # Main class (skeleton)
+│   │   ├── Segment.swift          # ✅ Geometric segment operations
 │   │   └── Models/                # Data models
 │   │       ├── PageInfo.swift     # Page information structure
 │   │       ├── PanelInfo.swift    # Panel information structure
@@ -73,7 +86,9 @@ swift/
 │       └── main.swift             # CLI entry point
 └── Tests/
     └── KumikoTests/
-        └── KumikoTests.swift      # Unit tests
+        ├── KumikoTests.swift           # Basic unit tests
+        ├── SegmentTests.swift          # ✅ Segment geometry tests (39 tests)
+        └── PythonCompatibilityTests.swift  # ✅ Python parity tests (15 tests)
 ```
 
 ## Architecture
@@ -98,15 +113,17 @@ Command-line interface matching the Python version's functionality:
 
 See [SWIFT_PORTING_PLAN.md](../SWIFT_PORTING_PLAN.md) for the complete 13-week implementation plan.
 
-### Next Steps (Phase 2)
+### Next Steps (Phase 3)
 
-Phase 2 will implement the `Segment` class for geometric operations:
-- Line segment representation
-- Distance and angle calculations
-- Segment intersection and union
-- No OpenCV dependency (pure Swift math)
+Phase 3 will implement the `Panel` class for panel detection operations:
+- Panel bounding box and geometry
+- Overlap and containment detection
+- Panel comparison and sorting (Comparable protocol)
+- Neighbor finding algorithms
+- Panel merging and grouping logic
+- Minimal OpenCV usage (boundingRect only)
 
-**Estimated completion**: 1 week
+**Estimated completion**: 1 week (~550 lines)
 
 ## Contributing
 
@@ -155,8 +172,8 @@ License, or (at your option) any later version.
 
 | Platform | Library | CLI | Status |
 |----------|---------|-----|--------|
-| macOS | ✅ | ✅ | Phase 1 complete |
-| Linux | ✅ | ✅ | Phase 1 complete |
+| macOS | ✅ | ✅ | Phase 2 complete |
+| Linux | ✅ | ✅ | Phase 2 complete |
 | iOS | 🟡 | ❌ | Future consideration |
 | Windows | ❌ | ❌ | Not planned |
 
