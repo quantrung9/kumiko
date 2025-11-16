@@ -33,19 +33,18 @@ let package = Package(
         ),
     ],
     targets: [
-        // C++ bridge for OpenCV with Swift interop
-        // Provides Swift-friendly wrappers around OpenCV functions
+        // Objective-C++ bridge for OpenCV file I/O on macOS
+        // opencv2 framework provides Mat, Imgproc, Core classes directly to Swift
+        // This target only adds file I/O helpers via Objective-C++
         .target(
             name: "OpenCVBridge",
             dependencies: [
                 .product(name: "opencv2", package: "opencv-spm")
             ],
             path: "Sources/OpenCVBridge",
-            sources: ["OpenCVBridge.cpp"],
-            publicHeadersPath: "include",
-            swiftSettings: [
-                .interoperabilityMode(.Cxx)
-            ]
+            publicHeadersPath: "include"
+            // Note: No C++ interop mode needed - using Objective-C++ (.mm files)
+            // SPM automatically compiles .mm files as Objective-C++
         ),
 
         // Main library target
