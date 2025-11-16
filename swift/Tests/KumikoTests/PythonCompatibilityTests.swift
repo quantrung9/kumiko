@@ -225,4 +225,107 @@ final class PythonCompatibilityTests: XCTestCase {
         XCTAssertTrue(options.panelExpansion)
         XCTAssertNil(options.minPanelSizeRatio)
     }
+
+    // MARK: - Panel Python Compatibility
+
+    func testPanelGeometryPythonCompat() {
+        // Mock page for testing
+        class TestPage: PanelPage {
+            var numbering: String = "ltr"
+            var imgSize: [Int] = [800, 1200]
+            var smallPanelRatio: Double = 0.1
+            var panels: [Panel] = []
+            var segments: [Segment] = []
+        }
+
+        let page = TestPage()
+
+        // Test panel dimensions matching Python's Panel class
+        let panel = Panel(page: page, xywh: [10, 20, 100, 150])
+
+        XCTAssertEqual(panel.x, 10)
+        XCTAssertEqual(panel.y, 20)
+        XCTAssertEqual(panel.r, 110)
+        XCTAssertEqual(panel.b, 170)
+        XCTAssertEqual(panel.w(), 100)
+        XCTAssertEqual(panel.h(), 150)
+        XCTAssertEqual(panel.area(), 15000)
+    }
+
+    func testPanelFromXYRBPythonCompat() {
+        // Match Python's Panel.from_xyrb() static method
+        class TestPage: PanelPage {
+            var numbering: String = "ltr"
+            var imgSize: [Int] = [800, 1200]
+            var smallPanelRatio: Double = 0.1
+            var panels: [Panel] = []
+            var segments: [Segment] = []
+        }
+
+        let page = TestPage()
+        let panel = Panel.fromXYRB(page: page, x: 10, y: 20, r: 110, b: 170)
+
+        XCTAssertEqual(panel.toXYWH(), [10, 20, 100, 150])
+    }
+
+    func testPanelOverlapPythonCompat() {
+        // Test overlap detection matching Python behavior
+        class TestPage: PanelPage {
+            var numbering: String = "ltr"
+            var imgSize: [Int] = [800, 1200]
+            var smallPanelRatio: Double = 0.1
+            var panels: [Panel] = []
+            var segments: [Segment] = []
+        }
+
+        let page = TestPage()
+
+        let p1 = Panel(page: page, xywh: [0, 0, 100, 100])
+        let p2 = Panel(page: page, xywh: [50, 50, 100, 100])
+
+        let overlap = p1.overlapPanel(p2)
+        XCTAssertNotNil(overlap)
+        XCTAssertEqual(overlap?.toXYWH(), [50, 50, 50, 50])
+        XCTAssertEqual(overlap?.area(), 2500)
+    }
+
+    func testPanelSortingPythonCompat() {
+        // Test panel sorting matching Python's __lt__ implementation
+        class TestPage: PanelPage {
+            var numbering: String = "ltr"
+            var imgSize: [Int] = [800, 1200]
+            var smallPanelRatio: Double = 0.1
+            var panels: [Panel] = []
+            var segments: [Segment] = []
+        }
+
+        let page = TestPage()
+
+        let topLeft = Panel(page: page, xywh: [0, 0, 100, 100])
+        let topRight = Panel(page: page, xywh: [200, 0, 100, 100])
+        let bottomLeft = Panel(page: page, xywh: [0, 200, 100, 100])
+
+        // Vertical ordering takes precedence
+        XCTAssertTrue(topLeft < bottomLeft)
+        XCTAssertTrue(topRight < bottomLeft)
+
+        // Horizontal ordering within same row
+        XCTAssertTrue(topLeft < topRight)
+    }
+
+    func testPanelDescriptionPythonCompat() {
+        // Match Python's __str__ method
+        class TestPage: PanelPage {
+            var numbering: String = "ltr"
+            var imgSize: [Int] = [800, 1200]
+            var smallPanelRatio: Double = 0.1
+            var panels: [Panel] = []
+            var segments: [Segment] = []
+        }
+
+        let page = TestPage()
+        let panel = Panel(page: page, xywh: [10, 20, 100, 150])
+
+        XCTAssertEqual(panel.description, "10x20-110x170")
+    }
 }
