@@ -2,7 +2,7 @@
 
 Swift port of [Kumiko](https://github.com/njean42/kumiko), the comic panel detection tool.
 
-## Status: Phase 4 - OpenCV Integration Complete ✅
+## Status: Phase 5 - Page Analysis Algorithm Complete ✅
 
 This is an in-progress port of Kumiko from Python to Swift. The implementation follows a 13-week roadmap detailed in [SWIFT_PORTING_PLAN.md](../SWIFT_PORTING_PLAN.md).
 
@@ -13,8 +13,8 @@ This is an in-progress port of Kumiko from Python to Swift. The implementation f
 | **Phase 1** | ✅ **Complete** | Foundation & project setup |
 | **Phase 2** | ✅ **Complete** | Geometry module (Segment) |
 | **Phase 3** | ✅ **Complete** | Panel operations |
-| **Phase 4** | ✅ **Complete** | OpenCV integration |
-| Phase 5 | ⏳ Pending | Page analysis algorithm |
+| **Phase 4** | ✅ **Complete** | OpenCV integration (opencv-spm) |
+| **Phase 5** | ✅ **Complete** | Page analysis algorithm |
 | Phase 6 | ⏳ Pending | Main Kumiko class |
 | Phase 7 | ⏳ Pending | Debug & HTML generation |
 | Phase 8 | ⏳ Pending | CLI tool |
@@ -50,14 +50,29 @@ This is an in-progress port of Kumiko from Python to Swift. The implementation f
 
 ### Phase 4 Deliverables ✅
 
-- ✅ System library target for OpenCV (COpenCV)
+- ✅ OpenCV integration via opencv-spm (automatic binary download)
 - ✅ C++ bridge with Swift 5.9+ interop (OpenCVBridge)
 - ✅ boundingRectFromPoints() implementation
 - ✅ Panel polygon initialization with OpenCV
 - ✅ 20+ OpenCV bridge unit tests
 - ✅ 5 new polygon-based Panel tests
-- ✅ Cross-platform support (macOS + Linux)
-- ✅ Fallback to simple calculation if OpenCV unavailable
+- ✅ Simplified build (no manual OpenCV installation)
+
+### Phase 5 Deliverables ✅
+
+- ✅ Complete Page class (~550 lines)
+- ✅ OpenCV bridge extensions (+11 functions, ~280 lines C++)
+- ✅ Image I/O (loadImage, saveImage)
+- ✅ Image processing (Sobel, color conversion, thresholding)
+- ✅ Contour detection (findContours, arcLength, approxPolyDP)
+- ✅ Line segment detection (LSD)
+- ✅ Full panel detection pipeline (15 steps)
+- ✅ Panel grouping, splitting, merging, de-overlapping
+- ✅ Panel expansion into gutters
+- ✅ Reading order sorting (LTR/RTL)
+- ✅ 25+ OpenCV image tests
+- ✅ 20+ Page unit tests
+- ✅ Design documentation (PHASE5_DESIGN.md)
 
 ## Requirements
 
