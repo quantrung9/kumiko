@@ -1,0 +1,71 @@
+# SwiftLint Configuration for Kumiko Swift
+
+# Paths to include/exclude
+included:
+  - Sources
+  - Tests
+
+excluded:
+  - .build
+  - .swiftpm
+  - Tests/KumikoTests/Resources
+
+# Enabled rules
+opt_in_rules:
+  - explicit_init
+  - explicit_self
+  - explicit_top_level_acl
+  - file_header
+  - multiline_arguments
+  - multiline_parameters
+  - sorted_imports
+
+# Disabled rules
+disabled_rules:
+  - todo
+  - line_length  # Will enable with custom limit later
+
+# Rule configurations
+file_length:
+  warning: 500
+  error: 800
+
+type_body_length:
+  warning: 300
+  error: 500
+
+function_body_length:
+  warning: 60
+  error: 100
+
+identifier_name:
+  min_length:
+    warning: 2
+  max_length:
+    warning: 50
+    error: 60
+  excluded:
+    - x
+    - y
+    - w
+    - h
+    - a
+    - b
+    - r
+    - i
+    - j
+    - k
+
+# File header requirement
+file_header:
+  required_pattern: |
+                    \/\/
+                    \/\/  .*\.swift
+                    \/\/  Kumiko
+                    \/\/
+                    \/\/  Swift port of Kumiko comic panel detection
+                    \/\/  Original Python version: https:\/\/github\.com\/njean42\/kumiko
+                    \/\/
+                    \/\/  Copyright \(C\) 202\d
+                    \/\/  Licensed under AGPL-3\.0
+                    \/\/
