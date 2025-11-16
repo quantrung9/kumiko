@@ -10,6 +10,7 @@
 //
 
 import Foundation
+import OpenCVBridge
 
 /// Protocol for page-like objects that panels belong to
 ///
@@ -111,19 +112,39 @@ public class Panel {
 
     /// Calculate bounding rectangle from polygon
     ///
-    /// This is a simplified version for Phase 3. Full OpenCV version in Phase 4.
+    /// Phase 4: Uses OpenCV's cv::boundingRect for accurate bounding box calculation.
+    /// Falls back to simple min/max calculation if OpenCV is unavailable or fails.
+    ///
+    /// - Parameter polygon: Array of point arrays, typically [[x, y], ...]
+    /// - Returns: Bounding box as [x, y, width, height]
     private static func boundingRectFromPolygon(_ polygon: [[Point]]) -> [Int] {
         guard !polygon.isEmpty, !polygon[0].isEmpty else {
             return [0, 0, 0, 0]
         }
 
         let points = polygon[0]
-        let minX = points.map { $0.x }.min() ?? 0
-        let minY = points.map { $0.y }.min() ?? 0
-        let maxX = points.map { $0.x }.max() ?? 0
-        let maxY = points.map { $0.y }.max() ?? 0
 
-        return [minX, minY, maxX - minX, maxY - minY]
+        // Try OpenCV implementation first
+        var cvPoints = std.vector<OpenCVBridge.Point>()
+        for point in points {
+            cvPoints.push_back(OpenCVBridge.Point(x: Int32(point.x), y: Int32(point.y)))
+        }
+
+        let result = OpenCVBridge.boundingRectFromPoints(cvPoints)
+
+        if result.success {
+            // OpenCV succeeded
+            let rect = result.value
+            return [Int(rect.x), Int(rect.y), Int(rect.width), Int(rect.height)]
+        } else {
+            // Fallback to simple calculation (Phase 3 version)
+            let minX = points.map { $0.x }.min() ?? 0
+            let minY = points.map { $0.y }.min() ?? 0
+            let maxX = points.map { $0.x }.max() ?? 0
+            let maxY = points.map { $0.y }.max() ?? 0
+
+            return [minX, minY, maxX - minX, maxY - minY]
+        }
     }
 
     // MARK: - Geometry

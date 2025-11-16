@@ -27,17 +27,50 @@ let package = Package(
             url: "https://github.com/apple/swift-argument-parser.git",
             from: "1.3.0"
         ),
-        // Note: OpenCV integration will be added in Phase 4
-        // Options being researched:
-        // 1. Community Swift-OpenCV wrappers
-        // 2. Manual xcframework integration
-        // 3. C++ interop bridge
+        // Phase 4: OpenCV integration via Swift C++ interop
+        // Uses system-installed OpenCV (brew install opencv or apt-get install libopencv-dev)
     ],
     targets: [
+        // Phase 4: System library for OpenCV
+        // Links to OpenCV installed via package manager (brew/apt-get)
+        .systemLibrary(
+            name: "COpenCV",
+            path: "Sources/COpenCV",
+            pkgConfig: "opencv4",
+            providers: [
+                .apt(["libopencv-dev"]),
+                .brew(["opencv"])
+            ]
+        ),
+
+        // Phase 4: C++ bridge for OpenCV with Swift interop
+        // Provides Swift-friendly wrappers around OpenCV functions
+        .target(
+            name: "OpenCVBridge",
+            dependencies: ["COpenCV"],
+            path: "Sources/OpenCVBridge",
+            sources: ["OpenCVBridge.cpp"],
+            publicHeadersPath: "include",
+            cxxSettings: [
+                .headerSearchPath("/usr/local/include/opencv4"),
+                .headerSearchPath("/opt/homebrew/include/opencv4"),
+                .headerSearchPath("/usr/include/opencv4"),
+                .define("HAVE_OPENCV")
+            ],
+            swiftSettings: [
+                .interoperabilityMode(.Cxx)
+            ],
+            linkerSettings: [
+                .linkedLibrary("opencv_core"),
+                .linkedLibrary("opencv_imgproc"),
+                .linkedLibrary("opencv_imgcodecs")
+            ]
+        ),
+
         // Main library target
         .target(
             name: "Kumiko",
-            dependencies: [],
+            dependencies: ["OpenCVBridge"],
             path: "Sources/Kumiko"
         ),
 

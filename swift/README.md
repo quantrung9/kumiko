@@ -2,7 +2,7 @@
 
 Swift port of [Kumiko](https://github.com/njean42/kumiko), the comic panel detection tool.
 
-## Status: Phase 3 - Panel Operations Complete ✅
+## Status: Phase 4 - OpenCV Integration Complete ✅
 
 This is an in-progress port of Kumiko from Python to Swift. The implementation follows a 13-week roadmap detailed in [SWIFT_PORTING_PLAN.md](../SWIFT_PORTING_PLAN.md).
 
@@ -13,7 +13,7 @@ This is an in-progress port of Kumiko from Python to Swift. The implementation f
 | **Phase 1** | ✅ **Complete** | Foundation & project setup |
 | **Phase 2** | ✅ **Complete** | Geometry module (Segment) |
 | **Phase 3** | ✅ **Complete** | Panel operations |
-| Phase 4 | ⏳ Pending | OpenCV integration |
+| **Phase 4** | ✅ **Complete** | OpenCV integration |
 | Phase 5 | ⏳ Pending | Page analysis algorithm |
 | Phase 6 | ⏳ Pending | Main Kumiko class |
 | Phase 7 | ⏳ Pending | Debug & HTML generation |
@@ -48,11 +48,51 @@ This is an in-progress port of Kumiko from Python to Swift. The implementation f
 - ✅ 50 comprehensive unit tests
 - ✅ 90% feature parity with Python lib/panel.py (split deferred to Phase 5)
 
+### Phase 4 Deliverables ✅
+
+- ✅ System library target for OpenCV (COpenCV)
+- ✅ C++ bridge with Swift 5.9+ interop (OpenCVBridge)
+- ✅ boundingRectFromPoints() implementation
+- ✅ Panel polygon initialization with OpenCV
+- ✅ 20+ OpenCV bridge unit tests
+- ✅ 5 new polygon-based Panel tests
+- ✅ Cross-platform support (macOS + Linux)
+- ✅ Fallback to simple calculation if OpenCV unavailable
+
 ## Requirements
 
 - **Swift 5.9+** (for Swift-C++ interop support)
 - **macOS 13+** or **Linux** (Ubuntu 20.04+)
-- **OpenCV** (to be integrated in Phase 4)
+- **OpenCV 4.x** (required for Phase 4+)
+
+### Installing OpenCV
+
+#### macOS
+
+```bash
+brew install opencv
+```
+
+#### Linux (Ubuntu/Debian)
+
+```bash
+sudo apt-get update
+sudo apt-get install libopencv-dev
+```
+
+#### Linux (Fedora/RHEL)
+
+```bash
+sudo dnf install opencv-devel
+```
+
+#### Verify Installation
+
+```bash
+pkg-config --modversion opencv4
+```
+
+For detailed troubleshooting, see [Sources/COpenCV/README.md](Sources/COpenCV/README.md).
 
 ## Building
 
@@ -84,11 +124,21 @@ swift/
 ├── PHASE1_CHECKLIST.md             # Phase 1 completion tracking
 ├── PHASE2_CHECKLIST.md             # Phase 2 completion tracking
 ├── PHASE3_CHECKLIST.md             # Phase 3 completion tracking
+├── PHASE4_CHECKLIST.md             # Phase 4 completion tracking
+├── PHASE4_OPENCV_INTEGRATION.md    # ✅ OpenCV research & architecture
+├── PHASE4_BRIDGE_ARCHITECTURE.md   # ✅ Detailed bridge design
 ├── Sources/
+│   ├── COpenCV/                    # ✅ System library for OpenCV
+│   │   ├── module.modulemap       # Clang module definition
+│   │   └── README.md              # Installation instructions
+│   ├── OpenCVBridge/               # ✅ C++ bridge with Swift interop
+│   │   ├── include/
+│   │   │   └── OpenCVBridge.h     # Public C++ API
+│   │   └── OpenCVBridge.cpp       # OpenCV wrapper implementation
 │   ├── Kumiko/                     # Library module
 │   │   ├── Kumiko.swift           # Main class (skeleton)
 │   │   ├── Segment.swift          # ✅ Geometric segment operations
-│   │   ├── Panel.swift            # ✅ Panel detection & operations
+│   │   ├── Panel.swift            # ✅ Panel detection & operations (OpenCV)
 │   │   └── Models/                # Data models
 │   │       ├── PageInfo.swift     # Page information structure
 │   │       ├── PanelInfo.swift    # Panel information structure
@@ -99,7 +149,8 @@ swift/
     └── KumikoTests/
         ├── KumikoTests.swift           # Basic unit tests
         ├── SegmentTests.swift          # ✅ Segment geometry tests (39 tests)
-        ├── PanelTests.swift            # ✅ Panel operation tests (45 tests)
+        ├── PanelTests.swift            # ✅ Panel operation tests (50 tests)
+        ├── OpenCVBridgeTests.swift     # ✅ OpenCV bridge tests (20 tests)
         └── PythonCompatibilityTests.swift  # ✅ Python parity tests (20 tests)
 ```
 
@@ -125,15 +176,16 @@ Command-line interface matching the Python version's functionality:
 
 See [SWIFT_PORTING_PLAN.md](../SWIFT_PORTING_PLAN.md) for the complete 13-week implementation plan.
 
-### Next Steps (Phase 4)
+### Next Steps (Phase 5)
 
-Phase 4 will integrate OpenCV for image processing:
-- Research Swift-OpenCV integration options
-- Add OpenCV framework to Swift Package Manager
-- Implement OpenCV-based operations
-- Replace polygon bounding rect stub
-- Test OpenCV bindings on macOS and Linux
-- Prepare for Phase 5 (Page analysis)
+Phase 5 will implement the Page analysis algorithm:
+- Create Page class with image loading
+- Implement panel detection algorithm
+- Add contour detection with OpenCV
+- Implement panel splitting logic
+- Integrate gutters detection
+- Comprehensive page analysis tests
+- Prepare for Phase 6 (Main Kumiko class)
 
 **Estimated completion**: 2 weeks (complexity: high)
 

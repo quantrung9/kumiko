@@ -415,6 +415,89 @@ final class PanelTests: XCTestCase {
         XCTAssertEqual(segments.count, 2) // Inside + crossing
     }
 
+    // MARK: - Polygon Initialization (Phase 4: OpenCV Integration)
+
+    func testPanelFromRectangularPolygon() {
+        // Test panel creation from rectangular polygon
+        let polygon = [
+            [Point(x: 10, y: 20), Point(x: 110, y: 20),
+             Point(x: 110, y: 170), Point(x: 10, y: 170)]
+        ]
+
+        let panel = Panel(page: mockPage, polygon: polygon)
+
+        XCTAssertEqual(panel.x, 10)
+        XCTAssertEqual(panel.y, 20)
+        XCTAssertEqual(panel.r, 110)
+        XCTAssertEqual(panel.b, 170)
+        XCTAssertEqual(panel.w(), 100)
+        XCTAssertEqual(panel.h(), 150)
+    }
+
+    func testPanelFromIrregularPolygon() {
+        // Test with a diamond-shaped polygon
+        let polygon = [
+            [Point(x: 50, y: 0), Point(x: 100, y: 50),
+             Point(x: 50, y: 100), Point(x: 0, y: 50)]
+        ]
+
+        let panel = Panel(page: mockPage, polygon: polygon)
+
+        // Bounding rect should be the rectangle containing the diamond
+        XCTAssertEqual(panel.x, 0)
+        XCTAssertEqual(panel.y, 0)
+        XCTAssertEqual(panel.r, 100)
+        XCTAssertEqual(panel.b, 100)
+        XCTAssertEqual(panel.w(), 100)
+        XCTAssertEqual(panel.h(), 100)
+    }
+
+    func testPanelFromTrianglePolygon() {
+        // Test with a triangular polygon
+        let polygon = [
+            [Point(x: 50, y: 0), Point(x: 0, y: 100), Point(x: 100, y: 100)]
+        ]
+
+        let panel = Panel(page: mockPage, polygon: polygon)
+
+        XCTAssertEqual(panel.x, 0)
+        XCTAssertEqual(panel.y, 0)
+        XCTAssertEqual(panel.r, 100)
+        XCTAssertEqual(panel.b, 100)
+    }
+
+    func testPanelFromComplexPolygon() {
+        // Test with an L-shaped polygon
+        let polygon = [
+            [Point(x: 0, y: 0), Point(x: 50, y: 0),
+             Point(x: 50, y: 50), Point(x: 100, y: 50),
+             Point(x: 100, y: 100), Point(x: 0, y: 100)]
+        ]
+
+        let panel = Panel(page: mockPage, polygon: polygon)
+
+        // Bounding rect should contain the entire L-shape
+        XCTAssertEqual(panel.x, 0)
+        XCTAssertEqual(panel.y, 0)
+        XCTAssertEqual(panel.r, 100)
+        XCTAssertEqual(panel.b, 100)
+    }
+
+    func testPanelFromPolygonWithNegativeCoords() {
+        // Test with polygon containing negative coordinates
+        let polygon = [
+            [Point(x: -10, y: -20), Point(x: 90, y: -20),
+             Point(x: 90, y: 130), Point(x: -10, y: 130)]
+        ]
+
+        let panel = Panel(page: mockPage, polygon: polygon)
+
+        XCTAssertEqual(panel.x, -10)
+        XCTAssertEqual(panel.y, -20)
+        XCTAssertEqual(panel.r, 90)
+        XCTAssertEqual(panel.b, 130)
+    }
+
     // MARK: - Description
 
     func testPanelDescription() {
