@@ -62,37 +62,14 @@ This is an in-progress port of Kumiko from Python to Swift. The implementation f
 ## Requirements
 
 - **Swift 5.9+** (for Swift-C++ interop support)
-- **macOS 13+** or **Linux** (Ubuntu 20.04+)
-- **OpenCV 4.x** (required for Phase 4+)
+- **macOS 13+**
+- **Xcode 15+** (or Swift toolchain)
 
-### Installing OpenCV
+### OpenCV
 
-#### macOS
+OpenCV is **automatically downloaded** via Swift Package Manager using [opencv-spm](https://github.com/yeatse/opencv-spm).
 
-```bash
-brew install opencv
-```
-
-#### Linux (Ubuntu/Debian)
-
-```bash
-sudo apt-get update
-sudo apt-get install libopencv-dev
-```
-
-#### Linux (Fedora/RHEL)
-
-```bash
-sudo dnf install opencv-devel
-```
-
-#### Verify Installation
-
-```bash
-pkg-config --modversion opencv4
-```
-
-For detailed troubleshooting, see [Sources/COpenCV/README.md](Sources/COpenCV/README.md).
+**No manual installation required!** Just run `swift build` and SPM will handle everything.
 
 ## Building
 
@@ -101,19 +78,19 @@ cd swift
 swift build
 ```
 
+First build will download OpenCV binary framework (~100-200MB). Subsequent builds are fast.
+
 ## Testing
 
 ```bash
 swift test
 ```
 
-## Running (Skeleton Only)
+## Running
 
 ```bash
 swift run kumiko-cli -i /path/to/image.jpg
 ```
-
-**Note**: The CLI currently only demonstrates the argument parsing structure. Actual panel detection will be implemented in Phases 2-8.
 
 ## Project Structure
 
@@ -125,20 +102,17 @@ swift/
 ├── PHASE2_CHECKLIST.md             # Phase 2 completion tracking
 ├── PHASE3_CHECKLIST.md             # Phase 3 completion tracking
 ├── PHASE4_CHECKLIST.md             # Phase 4 completion tracking
-├── PHASE4_OPENCV_INTEGRATION.md    # ✅ OpenCV research & architecture
-├── PHASE4_BRIDGE_ARCHITECTURE.md   # ✅ Detailed bridge design
+├── PHASE5_DESIGN.md                # ✅ Page analysis design
 ├── Sources/
-│   ├── COpenCV/                    # ✅ System library for OpenCV
-│   │   ├── module.modulemap       # Clang module definition
-│   │   └── README.md              # Installation instructions
 │   ├── OpenCVBridge/               # ✅ C++ bridge with Swift interop
 │   │   ├── include/
 │   │   │   └── OpenCVBridge.h     # Public C++ API
 │   │   └── OpenCVBridge.cpp       # OpenCV wrapper implementation
 │   ├── Kumiko/                     # Library module
-│   │   ├── Kumiko.swift           # Main class (skeleton)
 │   │   ├── Segment.swift          # ✅ Geometric segment operations
-│   │   ├── Panel.swift            # ✅ Panel detection & operations (OpenCV)
+│   │   ├── Panel.swift            # ✅ Panel detection & operations
+│   │   ├── Page.swift             # ✅ Page analysis algorithm
+│   │   ├── Kumiko.swift           # Main class (skeleton)
 │   │   └── Models/                # Data models
 │   │       ├── PageInfo.swift     # Page information structure
 │   │       ├── PanelInfo.swift    # Panel information structure
